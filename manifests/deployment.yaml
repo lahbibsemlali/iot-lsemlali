@@ -1,39 +1,41 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: dev
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wil-playground
+  name: playground
   namespace: dev
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: wil-playground
+      app: playground
   template:
     metadata:
       labels:
-        app: wil-playground
+        app: playground
     spec:
       containers:
-      - name: wil-playground
+      - name: playground
         image: wil42/playground:v1
         ports:
         - containerPort: 8888
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: wil-playground-service
+  name: playground-service
   namespace: dev
 spec:
   selector:
-    app: wil-playground
+    app: playground
   ports:
   - protocol: TCP
     port: 8888
     targetPort: 8888
-  type: LoadBalancer
+  type: ClusterIP
